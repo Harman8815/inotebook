@@ -1,6 +1,9 @@
 const express = require('express');
 const connectToMongodb = require('./db'); 
-const app = express();
+var cors = require('cors')
+var app = express()
+ 
+app.use(cors())
 const port = 8080;
 
 connectToMongodb();

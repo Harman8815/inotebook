@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import NoteContext from "./NoteContext";
 
 const host = "http://localhost:8080/api/notes/";
-const authtoken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjczNWI1NmUzM2E2OTZlYzE1M2U2MDc3In0sImlhdCI6MTczMjIwMTI3NCwiZXhwIjoxNzMyMjA0ODc0fQ.6fKnRnDuOvxhalrMFE0LJRMkWFzQHv21So0yM3xQjN8";
+// const localStorage.getItem("authtoken"); = localStorage.getItem("localStorage.getItem("authtoken");");;
 
 const addNotes = (data) => {
+    console.log(localStorage.getItem("authtoken"));
     fetch(`${host}addnote`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "auth-token": authtoken,
+            "auth-token": localStorage.getItem("authtoken"),
         },
         body: JSON.stringify(data),
     })
@@ -30,7 +31,7 @@ const deleteNotes = (id, title, description) => {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
-            "auth-token": authtoken,
+            "auth-token": localStorage.getItem("authtoken"),
         },
         body: JSON.stringify({ id, title, description }), // Include id in the body
     })
@@ -50,7 +51,7 @@ const editNotes = (id, title, description) => {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
-            "auth-token": authtoken,
+            "auth-token": localStorage.getItem("authtoken"),
         },
         body: JSON.stringify({ id, title, description }), // Include id in the body
     })
@@ -76,7 +77,7 @@ const NoteState = (props) => {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    "auth-token": authtoken,
+                    "auth-token": localStorage.getItem("authtoken"),
                 },
             });
 
@@ -91,6 +92,7 @@ const NoteState = (props) => {
 
     React.useEffect(() => {
         fetchNotes();
+
     }, []);
     const addNote = (title, description, tag) => {
         const newNote = {
@@ -104,6 +106,7 @@ const NoteState = (props) => {
         };
         addNotes(newNote);
         setNotes([...notes, newNote]);
+        
     };
 
     const deleteNote = (id) => {
@@ -113,6 +116,7 @@ const NoteState = (props) => {
 
             deleteNotes(id, title, description);
             setNotes(notes.filter((note) => note._id !== id));
+            
         }
     };
 
@@ -126,12 +130,13 @@ const NoteState = (props) => {
                     : note
             );
             setNotes(updatedNotes);
+            
         }
     };
-    
+
 
     return (
-        <NoteContext.Provider value={{ notes, addNote, deleteNote, updateNotes ,fetchNotes}}>
+        <NoteContext.Provider value={{ notes, addNote, deleteNote, updateNotes, fetchNotes }}>
             {props.children}
         </NoteContext.Provider>
     );

@@ -25,13 +25,33 @@ const Navbar = () => {
               <Link className={`nav-link ${location.pathname === "/" ? "active" : ""}`} aria-current="page" to="/">Home</Link>
             </li>
             <li className="nav-item">
-              <Link className={`nav-link ${location.pathname === "/link" ? "active" : ""}`} to="/link">Link</Link>
+              <Link className={`nav-link ${location.pathname === "/link" ? "active" : ""}`} to="/About">About</Link>
             </li>
           </ul>
-          <form className="d-flex" role="search">
-            <input className="form-control me-2 bg-dark text-light border-0" type="search" placeholder="Search" aria-label="Search" />
-            <button className="btn btn-outline-light" type="submit">Search</button>
+          <form className="d-flex">
+            {!localStorage.getItem('authtoken') ? (
+              
+              <>
+                <Link className="btn btn-primary mx-1" to="/login" role="button">
+                  Login
+                </Link>
+                <Link className="btn btn-primary mx-1" to="/signup" role="button">
+                  Signup
+                </Link>
+              </>
+            ) : (
+              <button
+                className="btn btn-primary mx-1"
+                onClick={() => {
+                  localStorage.removeItem('authtoken'); // Clear the token
+                  window.location.reload(); // Reload to update the UI
+                }}
+              >
+                Logout
+              </button>
+            )}
           </form>
+
         </div>
       </div>
     </nav>

@@ -1,16 +1,22 @@
 import React, { useContext, useState } from "react";
 import noteContext from "../context/Notes/NoteContext";
+import Alert from "./Alert";
 
-const AddNotes = () => {
+const AddNotes = (props) => {
     const context = useContext(noteContext);
     const { addNote } = context;
 
     const [note, setNote] = useState({ title: "", description: "", tag: "default" });
 
     const handleClick = (event) => {
-        event.preventDefault();
-        addNote(note.title, note.description, note.tag);
-        setNote({ title: "", description: "", tag: "default" }); // Reset form after adding
+        event.preventDefault();  // Prevent the form from submitting and reloading the page
+        if (note.title && note.description) {
+            addNote(note.title, note.description, note.tag);
+            setNote({ title: "", description: "", tag: "default" }); // Reset form after adding
+            props.showAlert("Added Successfully", "success");
+        } else {
+            props.showAlert("Please fill all fields", "danger");
+        }
     };
 
     const onChange = (event) => {
@@ -20,7 +26,7 @@ const AddNotes = () => {
     return (
         <div className="container my-4">
             <h2 className="mb-4">Add Notes</h2>
-            <form>
+            <form onSubmit={handleClick}> {/* Using onSubmit for form submission */}
                 <div className="mb-3">
                     <label htmlFor="title" className="form-label">
                         Note Title
@@ -63,7 +69,7 @@ const AddNotes = () => {
                         placeholder="Enter a tag"
                     />
                 </div>
-                <button type="submit" className="btn btn-primary" onClick={handleClick}>
+                <button type="submit" className="btn btn-primary">
                     Add Note
                 </button>
             </form>

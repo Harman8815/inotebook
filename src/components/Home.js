@@ -1,40 +1,36 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import noteContext from "../context/Notes/NoteContext";
 import NoteItem from "./NoteItem";
 import AddNotes from "./AddNotes";
 
-const Navbar = () => {
+const Home = (props) => {
   const context = useContext(noteContext);
-  const { notes, updateNotes,fetchNotes } = context;
+  const { notes, updateNotes, fetchNotes } = context;
 
   const ref = useRef(null);
   const refClose = useRef(null);
   const [note, setNote] = useState({ id: "", etitle: "", edescription: "", etag: "" });
 
+
+  fetchNotes()
   const updateNote = (currentNote) => {
     ref.current.click(); // Open modal
-    setNote({ 
-      id: currentNote._id, 
-      etitle: currentNote.title, 
-      edescription: currentNote.description, 
-      etag: currentNote.tag 
+    setNote({
+      id: currentNote._id,
+      etitle: currentNote.title,
+      edescription: currentNote.description,
+      etag: currentNote.tag
     });
+    
   };
 
-  
   const handleClick = (e) => {
     e.preventDefault();
     updateNotes(note.id, note.etitle, note.edescription, note.etag);
     refClose.current.click();
-    // setNote({
-    //   id: note.id,
-    //   etitle: note.etitle,
-    //   edescription: note.edescription,
-    //   etag: note.etag,
-    // });
+    
+    props.showAlert("notes updated sucessfully", "primary");
   };
-  
-  
 
   const onChange = (e) => {
     setNote({ ...note, [e.target.name]: e.target.value });
@@ -42,14 +38,14 @@ const Navbar = () => {
 
   return (
     <>
-      <AddNotes />
+      <AddNotes showAlert={props.showAlert} />
 
       {/* Modal Trigger Button (hidden, for controlling modal) */}
-      <button 
-        ref={ref} 
-        type="button" 
-        className="btn btn-primary d-none" 
-        data-bs-toggle="modal" 
+      <button
+        ref={ref}
+        type="button"
+        className="btn btn-primary d-none"
+        data-bs-toggle="modal"
         data-bs-target="#exampleModal"
       >
         Launch demo modal
@@ -67,56 +63,56 @@ const Navbar = () => {
               <form className="my-3">
                 <div className="mb-3">
                   <label htmlFor="etitle" className="form-label">Title</label>
-                  <input 
-                    type="text" 
-                    className="form-control" 
-                    id="etitle" 
-                    name="etitle" 
-                    value={note.etitle} 
-                    onChange={onChange} 
-                    minLength={5} 
-                    required 
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="etitle"
+                    name="etitle"
+                    value={note.etitle}
+                    onChange={onChange}
+                    minLength={5}
+                    required
                   />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="edescription" className="form-label">Description</label>
-                  <input 
-                    type="text" 
-                    className="form-control" 
-                    id="edescription" 
-                    name="edescription" 
-                    value={note.edescription} 
-                    onChange={onChange} 
-                    minLength={5} 
-                    required 
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="edescription"
+                    name="edescription"
+                    value={note.edescription}
+                    onChange={onChange}
+                    minLength={5}
+                    required
                   />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="etag" className="form-label">Tag</label>
-                  <input 
-                    type="text" 
-                    className="form-control" 
-                    id="etag" 
-                    name="etag" 
-                    value={note.etag} 
-                    onChange={onChange} 
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="etag"
+                    name="etag"
+                    value={note.etag}
+                    onChange={onChange}
                   />
                 </div>
               </form>
             </div>
             <div className="modal-footer">
-              <button 
-                ref={refClose} 
-                type="button" 
-                className="btn btn-secondary" 
+              <button
+                ref={refClose}
+                type="button"
+                className="btn btn-secondary"
                 data-bs-dismiss="modal"
               >
                 Close
               </button>
-              <button 
-                disabled={note.etitle.length < 5 || note.edescription.length < 5} 
-                onClick={handleClick} 
-                type="button" 
+              <button
+                disabled={note.etitle.length < 5 || note.edescription.length < 5}
+                onClick={handleClick}
+                type="button"
                 className="btn btn-primary"
               >
                 Update Note
@@ -133,7 +129,7 @@ const Navbar = () => {
           <div className="row">
             {notes.map((note) => (
               <div className="col-md-4" key={note._id}>
-                <NoteItem note={note} updateNote={updateNote} />
+                <NoteItem note={note} updateNote={updateNote} showAlert={props.showAlert} />
               </div>
             ))}
           </div>
@@ -147,4 +143,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default Home;
